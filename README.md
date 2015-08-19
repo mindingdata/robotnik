@@ -2,6 +2,7 @@
 
 ##To Run
 npm install
+npm build
 npm start
 
 ##General Instructions
