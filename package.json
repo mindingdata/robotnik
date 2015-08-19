@@ -18,5 +18,8 @@
   "dependencies": {
     "express": "^4.13.3",
     "vash": "^0.9.3"
+  }, 
+  "scripts": {
+    "install" : "bower install"
   }
 }
