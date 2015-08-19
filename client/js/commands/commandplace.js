@@ -11,6 +11,11 @@ class CommandPlace extends Command
 		return metaData;
 	}
 	
+	static run(iRobot, inputCommand)
+	{
+		iRobot._commandPlace(this.extractCommandMetadata(inputCommand));
+	}
+	
 	static Name = 'PLACE';
 }
 

@@ -48,23 +48,15 @@ class Robot
 			
 		let nextInputCommand = this.commandList.shift();
 		let nextCommand = this.availableCommands.find(cmd => cmd.validCommand(nextInputCommand));
+
 		if(nextCommand != undefined)
-		{
-			switch(nextCommand.Name)
-			{
-				case 'LEFT' : this._turnLeft();break;
-				case 'RIGHT' : this._turnRight(); break;
-				case 'PLACE' : this._place(CommandPlace.extractCommandMetadata(nextInputCommand));break;
-				case 'REPORT' : this._report(); break;
-				case 'MOVE' : this._move(); break;
-			}
-		}
+			nextCommand.run(this, nextInputCommand);
 		else
 			this._runNextCommand();
 	}
 	
 	
-	_turnLeft(commandOptions)
+	_commandLeft(commandOptions)
 	{
 		if(this.hasPlaced)
 		{
@@ -78,7 +70,7 @@ class Robot
 		
 	}
 	
-	_turnRight(commandOptions)
+	_commandRight(commandOptions)
 	{
 		if(this.hasPlaced)
 		{
@@ -91,7 +83,7 @@ class Robot
 		}
 	}
 	
-	_place(commandOptions)
+	_commandPlace(commandOptions)
 	{
 		if(commandOptions.x < 0 || commandOptions.x > this.maxSize - 1 
 			|| commandOptions.y < 0 || commandOptions.y > this.maxSize - 1)
@@ -107,7 +99,7 @@ class Robot
 		this._runNextCommand();
 	}
 	
-	_report(commandOptions)
+	_commandReport(commandOptions)
 	{
 		if(this.hasPlaced)
 		{
@@ -124,7 +116,7 @@ class Robot
 		}
 	}
 	
-	_move(commandOptions)
+	_commandMove(commandOptions)
 	{
 		if(this.hasPlaced)
 		{

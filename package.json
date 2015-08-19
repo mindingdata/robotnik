@@ -16,10 +16,13 @@
     "grunt-contrib-watch": "^0.6.1"
   },
   "dependencies": {
+    "babel": "^5.8.21",
+    "babel-runtime": "^5.8.20",
     "express": "^4.13.3",
     "vash": "^0.9.3"
-  }, 
+  },
   "scripts": {
-    "install" : "bower install"
+    "install": "bower install", 
+    "build": "grunt default"
   }
 }

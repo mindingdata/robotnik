@@ -1,3 +1,4 @@
+import 'babel/polyfill';
 import Robot from './Robot';
 
 let robot;
