@@ -1,5 +1,4 @@
 class Command {
-	constructor(){}
 	
 	static validCommand(inputCommand)
 	{

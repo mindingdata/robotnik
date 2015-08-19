@@ -27,6 +27,10 @@ var _commandsCommandreport = require('./commands/commandreport');
 
 var _commandsCommandreport2 = _interopRequireDefault(_commandsCommandreport);
 
+var _commandsCommandmove = require('./commands/commandmove');
+
+var _commandsCommandmove2 = _interopRequireDefault(_commandsCommandmove);
+
 var Robot = (function () {
 	function Robot(maxSize, board) {
 		_classCallCheck(this, Robot);
@@ -41,7 +45,7 @@ var Robot = (function () {
 		this.jid = "#" + this.id;
 		this.currentRotation = 0;
 
-		this.availableCommands = [_commandsCommandleft2['default'], _commandsCommandright2['default'], _commandsCommandplace2['default'], _commandsCommandreport2['default']];
+		this.availableCommands = [_commandsCommandleft2['default'], _commandsCommandright2['default'], _commandsCommandplace2['default'], _commandsCommandreport2['default'], _commandsCommandmove2['default']];
 		this.commandList = new Array();
 	}
 
@@ -79,9 +83,11 @@ var Robot = (function () {
 					case 'RIGHT':
 						this._turnRight();break;
 					case 'PLACE':
-						this._place(new _commandsCommandplace2['default'](nextInputCommand));break;
+						this._place(_commandsCommandplace2['default'].extractCommandMetadata(nextInputCommand));break;
 					case 'REPORT':
 						this._report();break;
+					case 'MOVE':
+						this._move();break;
 				}
 			} else this._runNextCommand();
 		}
@@ -118,6 +124,9 @@ var Robot = (function () {
 		value: function _place(commandOptions) {
 			if (commandOptions.x < 0 || commandOptions.x > this.maxSize - 1 || commandOptions.y < 0 || commandOptions.y > this.maxSize - 1) return;
 
+			this.x = commandOptions.x;
+			this.y = commandOptions.y;
+
 			$(this.jid).css('top', (this.maxSize - commandOptions.y - 1) * this.stepSize).css('left', commandOptions.x * this.stepSize);
 			this.hasPlaced = true;
 			this._runNextCommand();
@@ -126,7 +135,7 @@ var Robot = (function () {
 		key: '_report',
 		value: function _report(commandOptions) {
 			if (this.hasPlaced) {
-				var rotation = Math.abs($(this.jid).getRotateAngle()) / 90 % 4;
+				var rotation = this._getNormalizedRotation();
 				var rotationString = '';
 				switch (rotation) {
 					case 0:
@@ -141,6 +150,35 @@ var Robot = (function () {
 				alert(this.x + ' ' + this.y + ' ' + rotationString);
 			}
 		}
+	}, {
+		key: '_move',
+		value: function _move(commandOptions) {
+			var _this3 = this;
+
+			if (this.hasPlaced) {
+				var rotation = this._getNormalizedRotation();
+				switch (rotation) {
+					case 0:
+						if (this.y < this.maxSize - 1) this.y++;break;
+					case 1:
+						if (this.x < this.maxSize - 1) this.x++;break;
+					case 2:
+						if (this.y > 0) this.y--;break;
+					case 3:
+						if (this.x > 0) this.x--;break;
+				}
+				$(this.jid).animate({ top: (this.maxSize - this.y - 1) * this.stepSize, left: this.x * this.stepSize }, function () {
+					_this3._runNextCommand();
+				});
+			} else this._runNextCommand();
+		}
+	}, {
+		key: '_getNormalizedRotation',
+		value: function _getNormalizedRotation() {
+			var rotation = $(this.jid).getRotateAngle() / 90 % 4;
+			if (rotation < 0) rotation += 4;
+			return rotation;
+		}
 	}]);
 
 	return Robot;
@@ -149,7 +187,7 @@ var Robot = (function () {
 exports['default'] = Robot;
 module.exports = exports['default'];
 
-},{"./commands/commandleft":4,"./commands/commandplace":5,"./commands/commandreport":6,"./commands/commandright":7}],2:[function(require,module,exports){
+},{"./commands/commandleft":4,"./commands/commandmove":5,"./commands/commandplace":6,"./commands/commandreport":7,"./commands/commandright":8}],2:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -241,10 +279,10 @@ var _Command3 = _interopRequireDefault(_Command2);
 var CommandLeft = (function (_Command) {
 	_inherits(CommandLeft, _Command);
 
-	function CommandLeft(input) {
+	function CommandLeft() {
 		_classCallCheck(this, CommandLeft);
 
-		_get(Object.getPrototypeOf(CommandLeft.prototype), 'constructor', this).call(this);
+		_get(Object.getPrototypeOf(CommandLeft.prototype), 'constructor', this).apply(this, arguments);
 	}
 
 	_createClass(CommandLeft, null, [{
@@ -280,28 +318,25 @@ var _Command2 = require('./Command');
 
 var _Command3 = _interopRequireDefault(_Command2);
 
-var CommandPlace = (function (_Command) {
-	_inherits(CommandPlace, _Command);
+var CommandMove = (function (_Command) {
+	_inherits(CommandMove, _Command);
 
-	function CommandPlace(input) {
-		_classCallCheck(this, CommandPlace);
+	function CommandMove() {
+		_classCallCheck(this, CommandMove);
 
-		_get(Object.getPrototypeOf(CommandPlace.prototype), 'constructor', this).call(this);
-		var inputs = input.split(' ');
-		this.x = inputs[1];
-		this.y = inputs[2];
+		_get(Object.getPrototypeOf(CommandMove.prototype), 'constructor', this).apply(this, arguments);
 	}
 
-	_createClass(CommandPlace, null, [{
+	_createClass(CommandMove, null, [{
 		key: 'Name',
-		value: 'PLACE',
+		value: 'MOVE',
 		enumerable: true
 	}]);
 
-	return CommandPlace;
+	return CommandMove;
 })(_Command3['default']);
 
-exports['default'] = CommandPlace;
+exports['default'] = CommandMove;
 module.exports = exports['default'];
 
 },{"./Command":3}],6:[function(require,module,exports){
@@ -325,25 +360,34 @@ var _Command2 = require('./Command');
 
 var _Command3 = _interopRequireDefault(_Command2);
 
-var CommandReport = (function (_Command) {
-	_inherits(CommandReport, _Command);
+var CommandPlace = (function (_Command) {
+	_inherits(CommandPlace, _Command);
 
-	function CommandReport(input) {
-		_classCallCheck(this, CommandReport);
+	function CommandPlace() {
+		_classCallCheck(this, CommandPlace);
 
-		_get(Object.getPrototypeOf(CommandReport.prototype), 'constructor', this).call(this);
+		_get(Object.getPrototypeOf(CommandPlace.prototype), 'constructor', this).apply(this, arguments);
 	}
 
-	_createClass(CommandReport, null, [{
+	_createClass(CommandPlace, null, [{
+		key: 'extractCommandMetadata',
+		value: function extractCommandMetadata(input) {
+			var inputs = input.split(' ');
+			var metaData = {};
+			metaData.x = inputs[1];
+			metaData.y = inputs[2];
+			return metaData;
+		}
+	}, {
 		key: 'Name',
-		value: 'REPORT',
+		value: 'PLACE',
 		enumerable: true
 	}]);
 
-	return CommandReport;
+	return CommandPlace;
 })(_Command3['default']);
 
-exports['default'] = CommandReport;
+exports['default'] = CommandPlace;
 module.exports = exports['default'];
 
 },{"./Command":3}],7:[function(require,module,exports){
@@ -367,13 +411,55 @@ var _Command2 = require('./Command');
 
 var _Command3 = _interopRequireDefault(_Command2);
 
+var CommandReport = (function (_Command) {
+	_inherits(CommandReport, _Command);
+
+	function CommandReport() {
+		_classCallCheck(this, CommandReport);
+
+		_get(Object.getPrototypeOf(CommandReport.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(CommandReport, null, [{
+		key: 'Name',
+		value: 'REPORT',
+		enumerable: true
+	}]);
+
+	return CommandReport;
+})(_Command3['default']);
+
+exports['default'] = CommandReport;
+module.exports = exports['default'];
+
+},{"./Command":3}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _Command2 = require('./Command');
+
+var _Command3 = _interopRequireDefault(_Command2);
+
 var CommandRight = (function (_Command) {
 	_inherits(CommandRight, _Command);
 
-	function CommandRight(input) {
+	function CommandRight() {
 		_classCallCheck(this, CommandRight);
 
-		_get(Object.getPrototypeOf(CommandRight.prototype), 'constructor', this).call(this);
+		_get(Object.getPrototypeOf(CommandRight.prototype), 'constructor', this).apply(this, arguments);
 	}
 
 	_createClass(CommandRight, null, [{

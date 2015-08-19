@@ -2,12 +2,13 @@ import Command from './Command';
 
 class CommandPlace extends Command
 {
-	constructor (input)
+	static extractCommandMetadata (input)
 	{
-		super();
 		var inputs = input.split(' ');
-		this.x = inputs[1];
-		this.y = inputs[2];
+		var metaData = {};
+		metaData.x = inputs[1];
+		metaData.y = inputs[2];
+		return metaData;
 	}
 	
 	static Name = 'PLACE';

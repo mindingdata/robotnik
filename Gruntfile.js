@@ -7,13 +7,13 @@
                     transform: [["babelify", { "stage": 0 }]]
                 },
                 files: {
-                    "public/js/app.js": "public/src-js/app.js"
+                    "public/js/app.js": "client/js/app.js"
                 }
             }
         },
         watch: {
             scripts: {
-                files: "public/src-js/*.js",
+                files: "client/js/**/*.js",
                 tasks: ["browserify"]
             }
         }
