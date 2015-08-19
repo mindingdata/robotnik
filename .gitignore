@@ -32,3 +32,4 @@ obj
 jsconfig.json
 .settings
 bin
+/public/js/app.js
