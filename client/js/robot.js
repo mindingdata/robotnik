@@ -95,6 +95,16 @@ class Robot
 		$(this.jid)
 			.css('top', (this.maxSize - commandOptions.y - 1) * this.stepSize)
 			.css('left', commandOptions.x *  this.stepSize);
+			
+		switch(commandOptions.face)
+		{
+			case "NORTH" : this.currentRotation = 0;break;
+			case "WEST" : this.currentRotation = -90; break;
+			case "SOUTH" : this.currentRotation = 180; break;
+			case "EAST" : this.currentRotation = 90; break;
+		}
+		$(this.jid).rotate(this.currentRotation);
+		
 		this.hasPlaced = true;
 		this._runNextCommand();
 	}

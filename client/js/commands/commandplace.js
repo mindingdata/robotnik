@@ -4,10 +4,12 @@ class CommandPlace extends Command
 {
 	static extractCommandMetadata (input)
 	{
-		var inputs = input.split(' ');
+		var inputs = input.split(' '); 
+		var metaDataInput = inputs[1].split(',');
 		var metaData = {};
-		metaData.x = inputs[1];
-		metaData.y = inputs[2];
+		metaData.x = metaDataInput[0];
+		metaData.y = metaDataInput[1];
+		metaData.face = metaDataInput[2];
 		return metaData;
 	}
 	
