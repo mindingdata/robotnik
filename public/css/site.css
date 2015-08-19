@@ -1,0 +1,17 @@
+#gameboard {
+    border:solid 1px black;
+    height:auto;
+    padding:0;
+    position:relative;
+}
+
+.gamesquare {
+    background-color:grey;
+    border:solid 1px black;
+    float:left;
+}
+
+.robot
+{
+    position:absolute;
+}

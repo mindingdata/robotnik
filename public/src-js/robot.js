@@ -1,0 +1,125 @@
+﻿
+import CommandLeft from './commands/commandleft';
+import CommandRight from './commands/commandright';
+import CommandPlace from './commands/commandplace';
+import CommandReport from './commands/commandreport';
+
+class Robot 
+{
+	constructor (maxSize, board)
+	{
+		this.maxSize = maxSize;
+		this.board = board;
+		this.hasPlaced = false;
+		this.stepSize = board.outerWidth() / maxSize;
+		this.x = 0;
+		this.y = 0;
+		this.id = Math.floor((1 + Math.random()) * 0x10000).toString(16);
+		this.jid = "#" + this.id;
+		this.currentRotation = 0;
+		
+		this.availableCommands = [CommandLeft, CommandRight, CommandPlace, CommandReport];
+		this.commandList = new Array();
+	}
+	
+	render()
+	{
+		this.board.append('<img id="'+this.id+'" class="robot" src="images/robot.png" />')
+		$(this.jid).css('top', 0).css('left', 0 - this.stepSize).outerWidth(this.stepSize);
+	}
+	
+	destroy()
+	{
+		$(this.jid).remove();
+	}
+
+	runCommands(commands)
+	{
+		this.hasPlaced = false;
+		this.commandList = commands;
+		this._runNextCommand();
+	}
+	
+	_runNextCommand()
+	{
+		if(this.commandList.length == 0)
+			return;
+			
+		let nextInputCommand = this.commandList.shift();
+		let nextCommand = this.availableCommands.find(cmd => cmd.validCommand(nextInputCommand));
+		if(nextCommand != undefined)
+		{
+			switch(nextCommand.Name)
+			{
+				case 'LEFT' : this._turnLeft();break;
+				case 'RIGHT' : this._turnRight(); break;
+				case 'PLACE' : this._place(new CommandPlace(nextInputCommand));break;
+				case 'REPORT' : this._report(); break;
+			}
+		}
+		else
+			this._runNextCommand();
+	}
+	
+	
+	_turnLeft(commandOptions)
+	{
+		if(this.hasPlaced)
+		{
+			this.currentRotation -= 90;
+			$(this.jid).rotate({animateTo : this.currentRotation, callback : () => { this._runNextCommand();}} );
+		}
+		else
+		{
+			this._runNextCommand();
+		}
+		
+	}
+	
+	_turnRight(commandOptions)
+	{
+		if(this.hasPlaced)
+		{
+			this.currentRotation += 90;
+			$(this.jid).rotate({animateTo : this.currentRotation, callback : () => { this._runNextCommand();}} );
+		}
+		else
+		{
+			this._runNextCommand();
+		}
+	}
+	
+	_place(commandOptions)
+	{
+		if(commandOptions.x < 0 || commandOptions.x > this.maxSize - 1 
+			|| commandOptions.y < 0 || commandOptions.y > this.maxSize - 1)
+			return;
+			
+		$(this.jid)
+			.css('top', (this.maxSize - commandOptions.y - 1) * this.stepSize)
+			.css('left', commandOptions.x *  this.stepSize);
+		this.hasPlaced = true;
+		this._runNextCommand();
+	}
+	
+	_report(commandOptions)
+	{
+		if(this.hasPlaced)
+		{
+			let rotation = Math.abs($(this.jid).getRotateAngle()) / 90 % 4;
+			let rotationString = '';
+			switch(rotation)
+			{
+				case 0 : rotationString = 'NORTH'; break;
+				case 1 : rotationString = 'EAST'; break;
+				case 2 : rotationString = 'SOUTH'; break;
+				case 3 : rotationString = 'WEST'; break;
+			}
+			alert(this.x + ' ' + this.y + ' ' + rotationString);
+		}
+	}
+
+
+}
+
+export default Robot

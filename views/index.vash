@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Robot Game</title>
+        <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+        <link href="css/site.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <div id="gameboard" class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <textarea id="commandInputs"></textarea>
+                <input id="runButton" type="button" value="Run!" />
+            </div>
+        </div>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/js/rotate.js" type="text/javascript"></script>
+    <script src="/js/app.js" type="text/javascript">
+    </script>
+    </body>
+</html>
