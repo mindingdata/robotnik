@@ -15,3 +15,23 @@
 {
     position:absolute;
 }
+
+.navbar
+{
+    margin-top:20px;
+}
+
+#commandarea 
+{
+    text-align:center;
+}
+
+#commandarea h2
+{
+    margin-top:0;
+}
+
+#commandarea textarea
+{
+    margin-bottom:10px;
+}

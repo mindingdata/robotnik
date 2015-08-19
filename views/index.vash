@@ -7,11 +7,26 @@
     </head>
     <body>
         <div class="container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                    <a class="navbar-brand" href="/">Toy Robot Simulator</a>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        
             <div id="gameboard" class="col-md-6">
             </div>
-            <div class="col-md-6">
-                <textarea id="commandInputs"></textarea>
-                <input id="runButton" type="button" value="Run!" />
+            <div id="commandarea" class="col-md-6">
+                <div id="instructions">
+                    <h2>Instructions</h2>
+                    Step 1. Input commands below.<br /> 
+                    Step 2. Press Run!<br /> 
+                    Step 3. Watch your robot move!
+                </div>
+                <textarea id="commandInputs" class="form-control" rows="10"></textarea>
+                <input id="runButton" type="button" value="Run!" class="btn btn-primary" />
             </div>
         </div>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
