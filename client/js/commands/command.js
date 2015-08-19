@@ -2,7 +2,7 @@ class Command {
 	
 	static validCommand(inputCommand)
 	{
-		if(inputCommand.startsWith(this.Name))
+		if(inputCommand.match(this.InputMatch))
 			return true;
 	}
 }

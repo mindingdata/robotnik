@@ -248,7 +248,7 @@ var Command = (function () {
 	_createClass(Command, null, [{
 		key: "validCommand",
 		value: function validCommand(inputCommand) {
-			if (inputCommand.startsWith(this.Name)) return true;
+			if (inputCommand.match(this.InputMatch)) return true;
 		}
 	}]);
 
@@ -294,8 +294,8 @@ var CommandLeft = (function (_Command) {
 			iRobot._commandLeft();
 		}
 	}, {
-		key: 'Name',
-		value: 'LEFT',
+		key: 'InputMatch',
+		value: /LEFT/i,
 		enumerable: true
 	}]);
 
@@ -341,8 +341,8 @@ var CommandMove = (function (_Command) {
 			iRobot._commandMove();
 		}
 	}, {
-		key: 'Name',
-		value: 'MOVE',
+		key: 'InputMatch',
+		value: /MOVE/i,
 		enumerable: true
 	}]);
 
@@ -399,8 +399,8 @@ var CommandPlace = (function (_Command) {
 			iRobot._commandPlace(this.extractCommandMetadata(inputCommand));
 		}
 	}, {
-		key: 'Name',
-		value: 'PLACE',
+		key: 'InputMatch',
+		value: /PLACE\s\d,\d,[SOUTH|NORTH|WEST|EAST]/i,
 		enumerable: true
 	}]);
 
@@ -446,8 +446,8 @@ var CommandReport = (function (_Command) {
 			iRobot._commandReport();
 		}
 	}, {
-		key: 'Name',
-		value: 'REPORT',
+		key: 'InputMatch',
+		value: /REPORT/i,
 		enumerable: true
 	}]);
 
@@ -493,8 +493,8 @@ var CommandRight = (function (_Command) {
 			iRobot._commandRight();
 		}
 	}, {
-		key: 'Name',
-		value: 'RIGHT',
+		key: 'InputMatch',
+		value: /RIGHT/i,
 		enumerable: true
 	}]);
 

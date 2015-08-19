@@ -18,7 +18,7 @@ class CommandPlace extends Command
 		iRobot._commandPlace(this.extractCommandMetadata(inputCommand));
 	}
 	
-	static Name = 'PLACE';
+	static InputMatch = /PLACE\s\d,\d,[SOUTH|NORTH|WEST|EAST]/i;
 }
 
 export default CommandPlace;
